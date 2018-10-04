@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 import sys, os, socket
-from subprocess import call
+from subprocess import call #Method to call linux functions
 sys.path.append("../lib")       # for params
 import params
 
@@ -35,16 +35,5 @@ while True:
         while True:
             payload = framedReceive(sock, debug)
             if debug: print("rec'd: ", payload)
-            if payload: myFile += payload.decode().replace("\x00", "\n")
-            else:
-                textArr = myFile.split("//sep")
-                myPath = os.path.join(os.getcwd()+"/sent/"+textArr[0])
-                if(not call(["find", myPath])): #If file already exist
-                    newName = input("File repeated. Please provide new name file: \n")
-                    myPath=os.path.join(os.getcwd()+"/sent/"+newName)
-                with open(myPath, 'w') as file:
-                    file.write(textArr[1])
-                    file.close()
-                break
             payload += b"!"             # make emphatic!
             framedSend(sock, payload, debug)
